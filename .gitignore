@@ -5,3 +5,5 @@ dist/
 coverage/
 .nyc_output/
 package-lock.json
+
+config/config-*.json
