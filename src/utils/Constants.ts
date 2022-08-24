@@ -1,5 +1,5 @@
 
-export default class Constants {
+export class Constants {
 
     static readonly SNOWFLAKE_EPOCH = new Date('2022-01-01').getTime();
     static readonly MESSAGE_EXPIRED_IN_MS = 60000;
@@ -10,4 +10,6 @@ export default class Constants {
     static readonly HEADER_SEQUENCE = "X-Message-Sequence";
     static readonly HEADER_SIGNATURE = "X-Message-Signature";
 }
+
+export default Constants;
 

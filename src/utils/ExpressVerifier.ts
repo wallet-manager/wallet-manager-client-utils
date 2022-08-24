@@ -8,7 +8,7 @@ import Error from '../entities/Error';
 import { VerifyResult, default as WalletManagerUtils } from './WalletManagerUtils';
 
 
-export default class ExpressVerifier{
+export class ExpressVerifier{
 
     utils:WalletManagerUtils;
 

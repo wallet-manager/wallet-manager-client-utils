@@ -1,19 +1,15 @@
+import { CONFIG, AxiosInteceptor, WalletManagerUtils, Errors, Constants } from '../index';
 import { AxiosRequestConfig, AxiosInstance } from 'axios';
-import AxiosInteceptor from '../src/utils/AxiosInteceptor';
-import WalletManagerUtils from '../src/utils/WalletManagerUtils';
-import Constants from '../src/utils/Constants';
-import Errors from '../src/utils/Errors';
 
 import import_axios from 'axios';
 import { expect } from 'chai';
-import { CONFIG } from '../src/utils/ConfigLoader';
 
 const baseURL = "http://localhost:8080";
 const keysURL = "/keys";
 const testURL = "/merchant";
 
 
-async function getIdentity(axios:AxiosInstance) {
+async function getIdentity(axios: AxiosInstance) {
     let response = await axios.get(keysURL);
     return response.data;
 };

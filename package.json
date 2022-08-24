@@ -1,8 +1,9 @@
 {
-  "name": "@wallet-manager/wallet-manager-client-utils",
+  "name": "wallet-manager-client-utils",
   "version": "1.0.3",
   "description": "Utils of WalletManager client",
   "main": "./dist/index.js",
+  "homepage": "https://github.com/wallet-manager/wallet-manager-client-utils",
   "scripts": {
     "build": "tsc",
     "start": "yarn build && node ./dist/index.js",

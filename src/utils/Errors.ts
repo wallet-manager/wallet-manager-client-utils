@@ -1,6 +1,6 @@
 import { Error } from "../entities/Error";
 
-export default class Errors {
+export class Errors {
     static readonly SIGNATURE_NOT_MATCH: Error = {
         code: 1001,
         message: "Signature not match"

@@ -4,5 +4,3 @@ export interface Response{
     result?: any;
     error?: Error;
 }
-
-export default Response;

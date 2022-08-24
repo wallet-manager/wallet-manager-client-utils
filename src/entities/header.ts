@@ -5,5 +5,3 @@ export interface Header{
     sequence: number;
     signature: string;
 }
-
-export default Header;

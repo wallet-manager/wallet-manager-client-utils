@@ -2,7 +2,7 @@ import { AxiosRequestConfig, AxiosInstance } from 'axios';
 import WalletManagerUtils from './WalletManagerUtils';
 import Constants from './Constants';
 
-export default class AxiosInteceptor {
+export class AxiosInteceptor {
 
     utils: WalletManagerUtils;
 

@@ -33,6 +33,7 @@ export class ConfigLoader{
         return this.config;
     }
 }
+export default ConfigLoader;
 
 const configLoader = new ConfigLoader(NODE_ENV);
 export const CONFIG =  configLoader.load();

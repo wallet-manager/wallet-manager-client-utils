@@ -1,6 +1,6 @@
 import {describe, it} from "mocha";
 import {expect} from "chai";
-import {Snowflake} from '../dist';
+import {Snowflake} from '../index';
 
 
 describe("Test snowflake", function () {

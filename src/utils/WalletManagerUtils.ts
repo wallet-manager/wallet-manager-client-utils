@@ -1,4 +1,4 @@
-
+import { CONFIG } from './ConfigLoader';
 import Header from "../entities/Header";
 import Snowflake from "./SnowflakeUtils";
 import EthCrypto from 'eth-crypto';
@@ -13,7 +13,7 @@ export enum VerifyResult {
     Verified = 1,
   }
 
-export default class WalletManagerUtils{
+export class WalletManagerUtils{
 
     seq = 0;
     #sessionId:string;

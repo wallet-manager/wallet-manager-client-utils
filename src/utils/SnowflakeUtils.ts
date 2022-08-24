@@ -4,7 +4,7 @@ import Constants from './Constants';
 /**
  * Snowflake class to generate unique ID
  */
-export default class Snowflake{
+export class Snowflake{
 
     #uid:Sf;
 

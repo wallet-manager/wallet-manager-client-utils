@@ -1,7 +1,6 @@
-import {CONFIG} from "../src/utils/ConfigLoader";
+import {CONFIG, WalletManagerUtils, VerifyResult} from "../index";
 import {describe, it} from "mocha";
 import {expect, util} from "chai";
-import {WalletManagerUtils, VerifyResult} from '../index';
 
 
 const body1 = '{"abc":1}';
