@@ -3,10 +3,10 @@ import AxiosInteceptor from '../src/utils/AxiosInteceptor';
 import WalletManagerUtils from '../src/utils/WalletManagerUtils';
 import Constants from '../src/utils/Constants';
 import Errors from '../src/utils/Errors';
-import EthCrypto from "eth-crypto";
 
 import import_axios from 'axios';
 import { expect } from 'chai';
+import { CONFIG } from '../src/utils/ConfigLoader';
 
 const baseURL = "http://localhost:8080";
 const keysURL = "/keys";
@@ -44,9 +44,9 @@ describe("Test Axio Inteceptor", async function () {
         const instance = await createAxiosInstance();
 
         const response = await instance.post(testURL, { abc: 1 });
-        console.info(response);
         let data: any = response.data;
 
+        expect(data.result).to.equals(true);
         expect(data.error).to.be.undefined;
         expect(data.result).to.not.be.undefined;
         console.info(JSON.stringify(data));
@@ -55,12 +55,10 @@ describe("Test Axio Inteceptor", async function () {
     it("Expired request", async function () {
 
         const instance = await createAxiosInstance(config => {
-
             // expired
             if (config.headers) {
-                config.headers[Constants.HEADER_TIMESTAMP] = new Date().getTime() - Constants.MESSAGE_EXPIRED_IN_MS - 1;
+                config.headers[Constants.HEADER_TIMESTAMP] = new Date().getTime() - CONFIG.messageExpiredInMs - 1;
             }
-
             return config;
         });
 
@@ -76,7 +74,6 @@ describe("Test Axio Inteceptor", async function () {
     it("Signature not match request", async function () {
 
         const instance = await createAxiosInstance(config => {
-
             // update header address
             if (config.headers) {
                 config.headers[Constants.HEADER_ADDRESS] = config.headers[Constants.HEADER_ADDRESS] + "A";

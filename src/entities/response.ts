@@ -1,10 +1,8 @@
-export interface Error{
-    code: number;
-    message: string;
-    data?: any;
-}
+import { Error } from "./Error";
 
-export default interface Response{
+export interface Response{
     result?: any;
     error?: Error;
 }
+
+export default Response;

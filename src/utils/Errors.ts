@@ -1,4 +1,4 @@
-import { Error } from "../entities/Response";
+import { Error } from "../entities/Error";
 
 export default class Errors {
     static readonly SIGNATURE_NOT_MATCH: Error = {

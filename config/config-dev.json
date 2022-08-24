@@ -4,5 +4,6 @@
         "publicKey": "4786842fb09835899306df06daf2fe988ac6691cb1df8f0dc4b9e76d60a0ad3f8459c6d24299194756010423416ffb01bc2623af00b176401283e97d0183188f",
         "address": "0xeD0fe4A3F67938faB2E37EfcB93402EF7b8bc57E"
     },
-    "serverPort": 8080
+    "serverPort": 8080,
+    "messageExpiredInMs": 6000000
 }

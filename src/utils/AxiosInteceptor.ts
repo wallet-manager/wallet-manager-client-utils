@@ -10,27 +10,24 @@ export default class AxiosInteceptor {
         this.utils = utils;
     }
 
-    addRequestInteceptor(axios: AxiosInstance, configFun: (config: AxiosRequestConfig<any>) => AxiosRequestConfig<any> = (config) => config) {
+    addRequestInteceptor(axios: AxiosInstance, configFun: (config: AxiosRequestConfig<any>) => AxiosRequestConfig<any>) {
 
         let self = this;
 
         axios.interceptors.request.use(config => {
 
-            let headers: any;
+            let content:string = "";
             if (config.data) {
-                console.info(`config ${JSON.stringify(config)}`);
                 if (typeof config.data == 'string') {
-                    headers = self.utils.sign(config.data);
+                    content = config.data;
                 } else {
-                    const content = JSON.stringify(config.data)
-                    headers = self.utils.sign(content);
+                    content = JSON.stringify(config.data)
                     // set back the content of the signature to data
                     config.data = content;
                 }
-            } else {
-                headers = self.utils.sign("");
-            }
-
+                
+            } 
+            let headers = self.utils.sign(content);
             if (config.headers) {
                 config.headers[Constants.HEADER_ADDRESS] = headers.address;
                 config.headers[Constants.HEADER_SEQUENCE] = headers.sequence;
@@ -39,22 +36,16 @@ export default class AxiosInteceptor {
                 config.headers[Constants.HEADER_TIMESTAMP] = headers.timestamp;
             }
 
-
             if (config.headers) {
                 console.info(`reqeust headers ${JSON.stringify(config.headers)}`);
             }
             if (config.data) {
-                console.info(`request data ${JSON.stringify(config.data)}`);
+                console.info(`reqeust dagta ${content}`);
             }
-
             return configFun(config);
+
         }, function (error) {
             return Promise.reject(error);
         });
     }
-
-
 }
-
-
-
