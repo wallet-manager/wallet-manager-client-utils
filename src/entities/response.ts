@@ -1,10 +1,10 @@
 export interface Error{
-    code: string;
+    code: number;
     message: string;
-    data: any;
+    data?: any;
 }
 
-export interface Response{
-    result: any;
+export default interface Response{
+    result?: any;
     error?: Error;
 }

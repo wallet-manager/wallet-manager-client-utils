@@ -1,3 +1,3 @@
-export {Snowflake} from './src/utils/SnowflakeUtils';
-export {WalletManagerUtils} from './src/utils/WalletManagerUtils';
+export {default as Snowflake} from './src/utils/SnowflakeUtils';
+export {default as WalletManagerUtils, VerifyResult} from './src/utils/WalletManagerUtils';
 

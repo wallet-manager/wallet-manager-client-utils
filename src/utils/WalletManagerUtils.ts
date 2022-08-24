@@ -1,13 +1,21 @@
 
-import { Header } from "../entities/header";
-import { Snowflake } from "./SnowflakeUtils";
+import Header from "../entities/Header";
+import Snowflake from "./SnowflakeUtils";
 import EthCrypto from 'eth-crypto';
+import Constants from "./Constants";
+
 var hash = require('hash.js')
 
 
-export class WalletManagerUtils{
+export enum VerifyResult {
+    Expired = -1,
+    SignatureNotMatch = 0,
+    Verified = 1,
+  }
 
-    seq = 1n;
+export default class WalletManagerUtils{
+
+    seq = 0;
     #sessionId:string;
     #publicKey:string;
     #address:string;
@@ -33,9 +41,9 @@ export class WalletManagerUtils{
         let ts = new Date().getTime();
         let header:Header = {
             address: this.address,
-            timestamp: ts.toString(),
+            timestamp: ts,
             session: this.sessionId,
-            sequence: seq.toString(),
+            sequence: seq,
             signature: "",
         }
 
@@ -55,12 +63,24 @@ export class WalletManagerUtils{
      * @param header 
      * @param body 
      */
-    verify(header:Header, body:string = ""): boolean{
+    verify(header:Header, body:string = "", expiredInMs = Constants.MESSAGE_EXPIRED_IN_MS): VerifyResult{
 
         const content = this.contentToBeSigned(header, body);
+        //console.info(`Content to be signed ${content}`);
+
         const contentHash = hash.sha256().update(content).digest('hex');
         const address = EthCrypto.recover(header.signature, contentHash);
-        return address == header.address;
+
+        const now = new Date().getTime();
+        if(header.timestamp < now - expiredInMs){
+           return VerifyResult.Expired;
+        }
+
+        if(address == header.address){
+            return VerifyResult.Verified;
+        }else{
+            return VerifyResult.SignatureNotMatch;
+        }
     }
 
 
@@ -70,7 +90,7 @@ export class WalletManagerUtils{
      * @param body 
      */
      contentToBeSigned(header:Header, body:string):string{
-        return `${header.timestamp}#${header.session}#${header.sequence}#${body}`;
+        return `${header.timestamp.toFixed()}#${header.session}#${header.sequence.toFixed()}#${body}`;
     }
 
     get sessionId():string{

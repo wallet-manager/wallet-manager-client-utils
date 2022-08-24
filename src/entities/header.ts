@@ -1,9 +1,7 @@
-
-
-export interface Header{
+export default interface Header{
     address: string;
-    timestamp: string;
+    timestamp: number;
     session: string;
-    sequence: string;
+    sequence: number;
     signature: string;
 }

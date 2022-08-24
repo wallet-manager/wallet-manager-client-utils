@@ -1,16 +1,20 @@
+import {CONFIG} from "../src/utils/ConfigLoader";
 import {describe, it} from "mocha";
 import {expect, util} from "chai";
-import {WalletManagerUtils} from '../dist';
-import EthCrypto from 'eth-crypto';
+import {WalletManagerUtils, VerifyResult} from '../index';
 
-const body1 = "abc";
-const body2 = "efg";
+
+const body1 = '{"abc":1}';
+const body2 = '{"efg":2}';
 
 describe("Test WalletManagerUtils", function () {
     it("signature()", function(){
 
         // generate address, public and private keys
-        const identity = EthCrypto.createIdentity();
+        //const identity = EthCrypto.createIdentity();
+        const identity:any = CONFIG.identity;
+
+        console.info(JSON.stringify(identity));
 
         let utils = new WalletManagerUtils(identity.privateKey, 1);
 
@@ -19,15 +23,18 @@ describe("Test WalletManagerUtils", function () {
 
         // sign
         const header1 = utils.sign(body1);
+        console.info(body1);
         console.info(JSON.stringify(header1));
 
+
         const header2 = utils.sign(body2);
+        console.info(body2);
         console.info(JSON.stringify(header2));
 
         // verify
-        expect(utils.verify(header1, body1)).to.be.true;
-        expect(utils.verify(header2, body2)).to.be.true;
-        expect(utils.verify(header1, body2)).to.be.false;
-        expect(utils.verify(header2, body1)).to.be.false;
+        expect(utils.verify(header1, body1)).to.equals(VerifyResult.Verified);
+        expect(utils.verify(header2, body2)).to.equals(VerifyResult.Verified);
+        expect(utils.verify(header1, body2)).to.equals(VerifyResult.SignatureNotMatch);
+        expect(utils.verify(header2, body1)).to.equals(VerifyResult.SignatureNotMatch);
     })
 });
