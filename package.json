@@ -1,6 +1,6 @@
 {
   "name": "wallet-manager-client-utils",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Utils of WalletManager client",
   "main": "./dist/index.js",
   "scripts": {
