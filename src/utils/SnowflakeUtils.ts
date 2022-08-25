@@ -1,5 +1,5 @@
 import { Snowflake as Sf, SnowflakeOpts} from 'nodejs-snowflake';
-import Constants from './Constants';
+import {Constants} from './Constants';
 
 /**
  * Snowflake class to generate unique ID

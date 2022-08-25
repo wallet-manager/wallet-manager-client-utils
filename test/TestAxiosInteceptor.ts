@@ -1,35 +1,21 @@
 import { CONFIG, AxiosInteceptor, WalletManagerUtils, Errors, Constants } from '../index';
-import { AxiosRequestConfig, AxiosInstance } from 'axios';
+import { default as axios, AxiosRequestConfig, AxiosInstance } from 'axios';
 
-import import_axios from 'axios';
 import { expect } from 'chai';
 
-const baseURL = "http://localhost:8080";
 const keysURL = "/keys";
 const testURL = "/merchant";
+const {identity} = CONFIG;
+const {serverPort} = CONFIG.serverConfig;
+const {privateKey} = identity;
+const {instanceId, contentTypeJson} = CONFIG.clientConfig
 
+const baseURL = `http://localhost:${serverPort}`;
 
-async function getIdentity(axios: AxiosInstance) {
-    let response = await axios.get(keysURL);
-    return response.data;
-};
+function createAxiosInstance(configFun: (config: AxiosRequestConfig<any>) => AxiosRequestConfig<any> = (config) => config) {
 
-async function createAxiosInstance(configFun: (config: AxiosRequestConfig<any>) => AxiosRequestConfig<any> = (config) => config) {
-
-    const instance = import_axios.create({
-        baseURL,
-        headers: { "Content-Type": "text/plain" }
-    });
-
-    // generate address, public and private keys
-    const identity = await getIdentity(instance);
-    let utils = new WalletManagerUtils(identity.privateKey, 1);
-    let axiosInteceptor = new AxiosInteceptor(utils);
-
-    // add interceptors
-    axiosInteceptor.addRequestInteceptor(instance, configFun);
-
-    return instance;
+    let utils = new WalletManagerUtils(privateKey, instanceId);
+    return utils.createAxiosInstance(baseURL, contentTypeJson, configFun);
 }
 
 
@@ -37,7 +23,7 @@ describe("Test Axio Inteceptor", async function () {
 
     it("Normal request", async function () {
 
-        const instance = await createAxiosInstance();
+        const instance = createAxiosInstance();
 
         const response = await instance.post(testURL, { abc: 1 });
         let data: any = response.data;
@@ -50,10 +36,10 @@ describe("Test Axio Inteceptor", async function () {
 
     it("Expired request", async function () {
 
-        const instance = await createAxiosInstance(config => {
+        const instance = createAxiosInstance(config => {
             // expired
             if (config.headers) {
-                config.headers[Constants.HEADER_TIMESTAMP] = new Date().getTime() - CONFIG.messageExpiredInMs - 1;
+                config.headers[Constants.HEADER_TIMESTAMP] = new Date().getTime() - CONFIG.serverConfig.messageExpiredInMs - 1;
             }
             return config;
         });
@@ -69,10 +55,11 @@ describe("Test Axio Inteceptor", async function () {
 
     it("Signature not match request", async function () {
 
-        const instance = await createAxiosInstance(config => {
-            // update header address
-            if (config.headers) {
-                config.headers[Constants.HEADER_ADDRESS] = config.headers[Constants.HEADER_ADDRESS] + "A";
+        const instance = createAxiosInstance(config => {
+            // change content of body
+            if (config.data) {
+                //config.headers[Constants.HEADER_ADDRESS] = config.headers[Constants.HEADER_ADDRESS] + "A";
+                config.data = config.data + ' ';
             }
             return config;
         });

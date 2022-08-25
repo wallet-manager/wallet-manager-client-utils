@@ -1,8 +1,10 @@
-import { CONFIG } from './ConfigLoader';
-import Header from "../entities/Header";
-import Snowflake from "./SnowflakeUtils";
-import EthCrypto from 'eth-crypto';
-import Constants from "./Constants";
+import {Header} from "../entities/Header"
+import {Snowflake} from "./SnowflakeUtils"
+import EthCrypto from 'eth-crypto'
+import {Constants} from "./Constants"
+import {AxiosInteceptor} from "./AxiosInteceptor"
+
+import { default as axios, AxiosRequestConfig, AxiosInstance } from 'axios'
 
 var hash = require('hash.js')
 
@@ -22,7 +24,7 @@ export class WalletManagerUtils{
     #privateKey:string;
 
 
-    constructor(privateKey:string, instanceId:number = 1){
+    constructor(privateKey:string, instanceId:number){
         let sf = new Snowflake(instanceId);
         this.#sessionId = sf.getUniqueID().toString();
         this.#privateKey = privateKey;
@@ -103,6 +105,25 @@ export class WalletManagerUtils{
 
     get publicKey():string{
         return this.#publicKey;
+    }
+
+
+    createAxiosInstance(baseURL:string, contentTypeJson:boolean = false, configFun: (config: AxiosRequestConfig<any>) => AxiosRequestConfig<any> = (config) => config) {
+
+        let headers;
+        if(contentTypeJson){
+            headers = Constants.CONTENT_TYPE_JSON;
+        }else{
+            headers = Constants.CONTENT_TYPE_PLAIN_TEXT
+        }
+        const instance = axios.create({baseURL, headers});
+    
+        let axiosInteceptor = new AxiosInteceptor(this);
+    
+        // add interceptors
+        axiosInteceptor.addRequestInteceptor(instance, configFun);
+    
+        return instance;
     }
 
 }

@@ -1,6 +1,6 @@
 import { AxiosRequestConfig, AxiosInstance } from 'axios';
-import WalletManagerUtils from './WalletManagerUtils';
-import Constants from './Constants';
+import {WalletManagerUtils} from './WalletManagerUtils';
+import {Constants} from './Constants';
 
 export class AxiosInteceptor {
 
@@ -23,7 +23,13 @@ export class AxiosInteceptor {
                 } else {
                     content = JSON.stringify(config.data)
                     // set back the content of the signature to data
-                    config.data = content;
+
+                    if(config.headers){
+                        const contentType = config.headers[Constants.CONTENT_TYPE];
+                        if(contentType == Constants.PLAIN_TEXT){
+                            config.data = content;
+                        }
+                    }
                 }
                 
             } 
@@ -40,7 +46,7 @@ export class AxiosInteceptor {
                 console.info(`reqeust headers ${JSON.stringify(config.headers)}`);
             }
             if (config.data) {
-                console.info(`reqeust dagta ${content}`);
+                console.info(`reqeust data ${content}`);
             }
             return configFun(config);
 

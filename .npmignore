@@ -1,0 +1,9 @@
+config/
+coverage/
+test/
+src/
+index.ts
+tsconfig.json
+config/
+server/
+.*

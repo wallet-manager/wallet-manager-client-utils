@@ -11,14 +11,21 @@ describe("Test WalletManagerUtils", function () {
 
         // generate address, public and private keys
         //const identity = EthCrypto.createIdentity();
-        const identity:any = CONFIG.identity;
+        const {identity} = CONFIG;
+        const {privateKey} = identity;
+        const {instanceId} = CONFIG.clientConfig;
 
         console.info(JSON.stringify(identity));
 
-        let utils = new WalletManagerUtils(identity.privateKey, 1);
+        let utils = new WalletManagerUtils(privateKey, instanceId);
 
-        expect(utils.address).to.equals(identity.address);
-        expect(utils.publicKey).to.equals(identity.publicKey);
+        if(identity.address){
+            expect(utils.address).to.equals(identity.address);
+        }
+        
+        if(identity.publicKey){
+            expect(utils.publicKey).to.equals(identity.publicKey);
+        }
 
         // sign
         const header1 = utils.sign(body1);

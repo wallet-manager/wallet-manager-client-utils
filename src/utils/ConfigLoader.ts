@@ -1,4 +1,5 @@
 import doenv from 'dotenv';
+import { Config } from '../entities/Config'
 
 doenv.config();
 if (!process.env.NODE_ENV) {
@@ -13,14 +14,14 @@ import fs from 'fs';
 export class ConfigLoader{
     
     env:string;
-    config:any;
+    config?:Config;
 
     constructor(env:string){
         this.env = env;
-        this.config = null;
     }
 
-    load():any{
+    load():Config{
+        let result:Config;
         if(!this.config){
             const cwd  = process.cwd();
             const configFilePath = `${cwd}/config/config-${this.env}.json`;
@@ -28,12 +29,15 @@ export class ConfigLoader{
             console.info(`Load config from ${configFilePath}`);
             
             let checkListJsonStr:any = fs.readFileSync(configFilePath);
-            this.config = JSON.parse(checkListJsonStr);
+            result = JSON.parse(checkListJsonStr);
+            this.config = result;
+        }else{
+            result = this.config;
         }
-        return this.config;
+        return result;
     }
 }
-export default ConfigLoader;
+
 
 const configLoader = new ConfigLoader(NODE_ENV);
 export const CONFIG =  configLoader.load();

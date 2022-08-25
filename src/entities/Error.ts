@@ -3,5 +3,3 @@ export interface Error{
     message: string;
     data?: any;
 }
-
-export default Error;

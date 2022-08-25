@@ -2,18 +2,21 @@
 import {CONFIG} from "../src/utils/ConfigLoader";
 import { default as express, Request, Response, NextFunction } from 'express';
 import path from "path";
-import Constants from "../src/utils/Constants";
-import Header from "../src/entities/Header";
-import ExpressVerifier from "../src/utils/ExpressVerifier";
-import WalletManagerUtils from "../src/utils/WalletManagerUtils";
+import {Constants} from "../src/utils/Constants";
+import {Header} from "../src/entities/Header";
+import {ExpressVerifier} from "../src/utils/ExpressVerifier";
+import {WalletManagerUtils} from "../src/utils/WalletManagerUtils";
 
 const app = express();
 
 //const identity = EthCrypto.createIdentity();
-const identity:any = CONFIG.identity;
-const serverPort:any = CONFIG.serverPort;
+const {identity} = CONFIG;
+const {privateKey} = identity;
+const {serverPort} = CONFIG.serverConfig;
+const {instanceId} = CONFIG.clientConfig;
 
-const utils = new WalletManagerUtils(identity.privateKey);
+
+const utils = new WalletManagerUtils(privateKey, instanceId);
 
 const verifier = new ExpressVerifier(utils);
 

@@ -1,11 +1,11 @@
 import { CONFIG } from './ConfigLoader';
 import {Request, Response, NextFunction, Application} from 'express';
 import bodyParser from 'body-parser';
-import Constants from "./Constants";
-import Errors from './Errors';
-import Header from '../entities/Header';
-import Error from '../entities/Error';
-import { VerifyResult, default as WalletManagerUtils } from './WalletManagerUtils';
+import {Constants} from "./Constants";
+import {Errors} from './Errors';
+import {Header} from '../entities/Header';
+import {Error} from '../entities/Error';
+import { VerifyResult, WalletManagerUtils } from './WalletManagerUtils';
 
 
 export class ExpressVerifier{
@@ -44,7 +44,7 @@ export class ExpressVerifier{
             // console.info(`Verify header ${JSON.stringify(header)}`);
             // console.info(`Verfiy body ${body}`);
 
-            const result = this.utils.verify(header, body, CONFIG.messageExpiredInMs);
+            const result = this.utils.verify(header, body, CONFIG.serverConfig.messageExpiredInMs);
 
             if(result == VerifyResult.Verified){
                 next();
