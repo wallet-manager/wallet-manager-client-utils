@@ -1,7 +1,5 @@
-import { CONFIG, AxiosInteceptor, WalletManagerUtils, Errors, Constants } from '../index';
-import { default as axios, AxiosRequestConfig, AxiosInstance } from 'axios';
-
-import { expect } from 'chai';
+import { CONFIG, WalletManagerUtils } from '../index';
+import { AxiosRequestConfig } from 'axios';
 
 const { baseURL } = CONFIG.clientConfig;
 const identity = CONFIG.identity
@@ -11,7 +9,7 @@ const { instanceId, contentTypeJson} = CONFIG.clientConfig;
 
 function createAxiosInstance(configFun: (config: AxiosRequestConfig<any>) => AxiosRequestConfig<any> = (config) => config) {
 
-    let utils = new WalletManagerUtils(privateKey, instanceId);
+    const utils = new WalletManagerUtils(privateKey, instanceId);
     return utils.createAxiosInstance(baseURL, contentTypeJson, configFun);
 }
 
@@ -29,7 +27,7 @@ describe("Test Access API", async function () {
                 "chain_id": "1",
                 "client_id": new Date().getTime().toFixed()
             });
-        let data: any = response.data;
+        const data: unknown = response.data;
 
         console.info(JSON.stringify(data));
     });

@@ -1,9 +1,9 @@
-import { CONFIG, AxiosInteceptor, WalletManagerUtils, Errors, Constants } from '../index';
-import { default as axios, AxiosRequestConfig, AxiosInstance } from 'axios';
+import { CONFIG, WalletManagerUtils, Errors, Constants } from '../index';
+import { AxiosRequestConfig } from 'axios';
 
 import { expect } from 'chai';
 
-const keysURL = "/keys";
+//const keysURL = "/keys";
 const testURL = "/merchant";
 const {identity} = CONFIG;
 const {serverPort} = CONFIG.serverConfig;
@@ -14,7 +14,7 @@ const baseURL = `http://localhost:${serverPort}`;
 
 function createAxiosInstance(configFun: (config: AxiosRequestConfig<any>) => AxiosRequestConfig<any> = (config) => config) {
 
-    let utils = new WalletManagerUtils(privateKey, instanceId);
+    const utils = new WalletManagerUtils(privateKey, instanceId);
     return utils.createAxiosInstance(baseURL, contentTypeJson, configFun);
 }
 
@@ -26,7 +26,7 @@ describe("Test Axio Inteceptor", async function () {
         const instance = createAxiosInstance();
 
         const response = await instance.post(testURL, { abc: 1 });
-        let data: any = response.data;
+        const data = response.data;
 
         expect(data.result).to.equals(true);
         expect(data.error).to.be.undefined;
@@ -45,7 +45,7 @@ describe("Test Axio Inteceptor", async function () {
         });
 
         const response = await instance.post(testURL, { abc: 1 });
-        let data: any = response.data;
+        const data = response.data;
 
         expect(data.error.code).to.equals(Errors.MESSAGE_EXPIRED.code);
         expect(data.error.message).to.equals(Errors.MESSAGE_EXPIRED.message);
@@ -65,7 +65,7 @@ describe("Test Axio Inteceptor", async function () {
         });
 
         const response = await instance.post(testURL, { abc: 1 });
-        const data: any = response.data;
+        const data = response.data;
 
         expect(data.error).to.not.be.undefined;
         expect(data.error.code).to.equals(Errors.SIGNATURE_NOT_MATCH.code);

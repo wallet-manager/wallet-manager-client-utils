@@ -4,9 +4,9 @@ import EthCrypto from 'eth-crypto'
 import {Constants} from "./Constants"
 import {AxiosInteceptor} from "./AxiosInteceptor"
 
-import { default as axios, AxiosRequestConfig, AxiosInstance } from 'axios'
+import { default as axios, AxiosRequestConfig } from 'axios'
 
-var hash = require('hash.js')
+import hash from 'hash.js';
 
 
 export enum VerifyResult {
@@ -25,7 +25,7 @@ export class WalletManagerUtils{
 
 
     constructor(privateKey:string, instanceId:number){
-        let sf = new Snowflake(instanceId);
+        const sf = new Snowflake(instanceId);
         this.#sessionId = sf.getUniqueID().toString();
         this.#privateKey = privateKey;
         this.#publicKey = EthCrypto.publicKeyByPrivateKey(privateKey);
@@ -38,10 +38,10 @@ export class WalletManagerUtils{
      * @param body 
      * @returns return header values
      */
-    sign(body:string = ""): Header{
-        let seq = this.seq++;
-        let ts = new Date().getTime();
-        let header:Header = {
+    sign(body = ""): Header{
+        const seq = this.seq++;
+        const ts = new Date().getTime();
+        const header:Header = {
             address: this.address,
             timestamp: ts,
             session: this.sessionId,
@@ -65,7 +65,7 @@ export class WalletManagerUtils{
      * @param header 
      * @param body 
      */
-    verify(header:Header, body:string = "", expiredInMs = Constants.MESSAGE_EXPIRED_IN_MS): VerifyResult{
+    verify(header:Header, body = "", expiredInMs = Constants.MESSAGE_EXPIRED_IN_MS): VerifyResult{
 
         const content = this.contentToBeSigned(header, body);
         //console.info(`Content to be signed ${content}`);
@@ -108,7 +108,7 @@ export class WalletManagerUtils{
     }
 
 
-    createAxiosInstance(baseURL:string, contentTypeJson:boolean = false, configFun: (config: AxiosRequestConfig<any>) => AxiosRequestConfig<any> = (config) => config) {
+    createAxiosInstance(baseURL:string, contentTypeJson = false, configFun: (config: AxiosRequestConfig<any>) => AxiosRequestConfig<any> = (config) => config) {
 
         let headers;
         if(contentTypeJson){
@@ -118,7 +118,7 @@ export class WalletManagerUtils{
         }
         const instance = axios.create({baseURL, headers});
     
-        let axiosInteceptor = new AxiosInteceptor(this);
+        const axiosInteceptor = new AxiosInteceptor(this);
     
         // add interceptors
         axiosInteceptor.addRequestInteceptor(instance, configFun);

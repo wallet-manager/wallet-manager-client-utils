@@ -1,6 +1,6 @@
 import {CONFIG, WalletManagerUtils, VerifyResult} from "../index";
 import {describe, it} from "mocha";
-import {expect, util} from "chai";
+import {expect} from "chai";
 
 
 const body1 = '{"abc":1}';
@@ -17,7 +17,7 @@ describe("Test WalletManagerUtils", function () {
 
         console.info(JSON.stringify(identity));
 
-        let utils = new WalletManagerUtils(privateKey, instanceId);
+        const utils = new WalletManagerUtils(privateKey, instanceId);
 
         if(identity.address){
             expect(utils.address).to.equals(identity.address);

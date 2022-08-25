@@ -12,11 +12,12 @@ export class AxiosInteceptor {
 
     addRequestInteceptor(axios: AxiosInstance, configFun: (config: AxiosRequestConfig<any>) => AxiosRequestConfig<any>) {
 
-        let self = this;
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        const self = this;
 
         axios.interceptors.request.use(config => {
 
-            let content:string = "";
+            let content = "";
             if (config.data) {
                 if (typeof config.data == 'string') {
                     content = config.data;
@@ -33,7 +34,7 @@ export class AxiosInteceptor {
                 }
                 
             } 
-            let headers = self.utils.sign(content);
+            const headers = self.utils.sign(content);
             if (config.headers) {
                 config.headers[Constants.HEADER_ADDRESS] = headers.address;
                 config.headers[Constants.HEADER_SEQUENCE] = headers.sequence;
