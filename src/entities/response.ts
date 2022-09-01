@@ -1,6 +1,6 @@
 import { Error } from "./Error";
 
-export interface Response{
-    result?: any;
+export interface Response<T>{
+    result: T
     error?: Error;
 }

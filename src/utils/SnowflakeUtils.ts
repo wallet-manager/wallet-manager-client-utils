@@ -13,7 +13,7 @@ export class Snowflake{
      * @param instanceId default 1
      * @param customEpoch default from 2022-01-01
      */
-    constructor(instanceId:number = 1, customEpoch:number = Constants.SNOWFLAKE_EPOCH){
+    constructor(instanceId = 1, customEpoch:number = Constants.SNOWFLAKE_EPOCH){
 
         const config:SnowflakeOpts = {
             custom_epoch:customEpoch,
@@ -27,6 +27,7 @@ export class Snowflake{
      * Get unique ID
      * @returns 
      */
+    // eslint-disable-next-line @typescript-eslint/ban-types
     getUniqueID():BigInt{
         return this.#uid.getUniqueID();
     }

@@ -10,6 +10,7 @@ import hash from 'hash.js';
 
 
 export enum VerifyResult {
+    InvalidAddress = -2,
     Expired = -1,
     SignatureNotMatch = 0,
     Verified = 1,
@@ -49,7 +50,7 @@ export class WalletManagerUtils{
             signature: "",
         }
 
-        const content = this.contentToBeSigned(header, body);
+        const content = WalletManagerUtils.contentToBeSigned(header, body);
         const contentHash = hash.sha256().update(content).digest('hex');
         // sign
         const signature = EthCrypto.sign(this.#privateKey, contentHash);
@@ -58,27 +59,33 @@ export class WalletManagerUtils{
         header.signature = signature;
 
         return header;
-    }
+    } 
 
     /**
      * 
      * @param header 
      * @param body 
      */
-    verify(header:Header, body = "", expiredInMs = Constants.MESSAGE_EXPIRED_IN_MS): VerifyResult{
+     static verify(whiteListedAddresses:string[], header:Header, body:string, expiredInMs = Constants.MESSAGE_EXPIRED_IN_MS): VerifyResult{
+        
+        if(!whiteListedAddresses.includes(header.address)){
+            return VerifyResult.InvalidAddress;
+        }
 
-        const content = this.contentToBeSigned(header, body);
-        //console.info(`Content to be signed ${content}`);
+        const content = WalletManagerUtils.contentToBeSigned(header, body);
+        console.info(`Content to be signed ${content}`);
 
         const contentHash = hash.sha256().update(content).digest('hex');
-        const address = EthCrypto.recover(header.signature, contentHash);
+
+        console.info("message hash " + contentHash);
+        const recoverAddress = EthCrypto.recover(header.signature, contentHash);
 
         const now = new Date().getTime();
         if(header.timestamp < now - expiredInMs){
            return VerifyResult.Expired;
         }
 
-        if(address == header.address){
+        if(recoverAddress == header.address){
             return VerifyResult.Verified;
         }else{
             return VerifyResult.SignatureNotMatch;
@@ -91,7 +98,7 @@ export class WalletManagerUtils{
      * @param header 
      * @param body 
      */
-     contentToBeSigned(header:Header, body:string):string{
+     static contentToBeSigned(header:Header, body:string):string{
         return `${header.timestamp.toFixed()}#${header.session}#${header.sequence.toFixed()}#${body}`;
     }
 

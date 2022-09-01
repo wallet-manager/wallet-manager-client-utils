@@ -1,19 +1,20 @@
-import {CONFIG, WalletManagerUtils, VerifyResult} from "../index";
+import {CONFIG, WalletManagerUtils, VerifyResult, Header} from "../index";
 import {describe, it} from "mocha";
 import {expect} from "chai";
+import hash from 'hash.js';
 
 
 const body1 = '{"abc":1}';
 const body2 = '{"efg":2}';
 
+// generate address, public and private keys
+//const identity = EthCrypto.createIdentity();
+const {identity} = CONFIG;
+const {privateKey} = identity;
+const {instanceId} = CONFIG.clientConfig;
+
 describe("Test WalletManagerUtils", function () {
     it("signature()", function(){
-
-        // generate address, public and private keys
-        //const identity = EthCrypto.createIdentity();
-        const {identity} = CONFIG;
-        const {privateKey} = identity;
-        const {instanceId} = CONFIG.clientConfig;
 
         console.info(JSON.stringify(identity));
 
@@ -42,5 +43,32 @@ describe("Test WalletManagerUtils", function () {
         expect(utils.verify(header2, body2)).to.equals(VerifyResult.Verified);
         expect(utils.verify(header1, body2)).to.equals(VerifyResult.SignatureNotMatch);
         expect(utils.verify(header2, body1)).to.equals(VerifyResult.SignatureNotMatch);
-    })
+    });
+
+    it("check signature()", function(){
+
+    
+        const contentHash = hash.sha256().update("1661753503049#1013692403481055232#1#abc").digest('hex');
+
+        console.info(contentHash);
+
+        const utils = new WalletManagerUtils(privateKey, instanceId);
+
+        const header:Header = {
+            address:"0xd8D584ba78C6c7d02674764B2286A51C2495E192", 
+            timestamp:1661768808973,
+            session:"1013756599992324096",
+            sequence:1, 
+            signature:"81f42b0a101298d69936e558884510bcd957ef3a59bfd73e0b4a59fcae6707366ed0494c81da099d53cf217f994ffcb63a1fd4d33e78739dd93e9bd185649dd71c"
+        };
+
+        const body = '{"merchant_id":"1","chain_type":2,"chain_id":"4","client_id":"2"}';
+
+        const verifyResult = utils.verify(header, body, 100000000000000);
+        console.info(verifyResult);
+
+    });
 });
+
+// 1661753503049#1013692403481055232#2#abc
+// 1661753503049#1013692403481055232#1#abc

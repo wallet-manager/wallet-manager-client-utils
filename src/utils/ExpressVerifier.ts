@@ -10,22 +10,24 @@ import { VerifyResult, WalletManagerUtils } from './WalletManagerUtils';
 
 export class ExpressVerifier{
 
-    utils:WalletManagerUtils;
+    readonly utils:WalletManagerUtils;
+    readonly whiteListedAddresses:string[]
 
-    constructor(utils:WalletManagerUtils){
+    constructor(utils:WalletManagerUtils, whiteListedAddresses:string[]){
         this.utils = utils;
+        this.whiteListedAddresses = whiteListedAddresses;
     }
 
     get verifyMiddleware(){
         return (req: Request, res: Response, next:NextFunction) => {
     
-            let address = req.header(Constants.HEADER_ADDRESS);
-            let sequence = req.header(Constants.HEADER_SEQUENCE);
-            let session = req.header(Constants.HEADER_SESSION);
-            let signature = req.header(Constants.HEADER_SIGNATURE);
-            let timestamp = req.header(Constants.HEADER_TIMESTAMP);
+            const address = req.header(Constants.HEADER_ADDRESS);
+            const sequence = req.header(Constants.HEADER_SEQUENCE);
+            const session = req.header(Constants.HEADER_SESSION);
+            const signature = req.header(Constants.HEADER_SIGNATURE);
+            const timestamp = req.header(Constants.HEADER_TIMESTAMP);
         
-            let header: Header = {
+            const header: Header = {
                 address: address?.toString() || "",
                 sequence: parseInt(sequence?.toString() || "0"),
                 session: session?.toString() || "",
@@ -44,7 +46,7 @@ export class ExpressVerifier{
             // console.info(`Verify header ${JSON.stringify(header)}`);
             // console.info(`Verfiy body ${body}`);
 
-            const result = this.utils.verify(header, body, CONFIG.serverConfig.messageExpiredInMs);
+            const result = WalletManagerUtils.verify(this.whiteListedAddresses, header, body, CONFIG.serverConfig.messageExpiredInMs);
 
             if(result == VerifyResult.Verified){
                 next();
@@ -52,6 +54,8 @@ export class ExpressVerifier{
                 let error:Error;
                 if(result == VerifyResult.Expired){
                     error = Errors.MESSAGE_EXPIRED;
+                }else if (result == VerifyResult.InvalidAddress){
+                    error = Errors.INVALID_ADDRESS;
                 }else{
                     error = Errors.SIGNATURE_NOT_MATCH;
                 }
@@ -60,7 +64,7 @@ export class ExpressVerifier{
         }
     }
 
-    addVerifier(app:Application, path:string = ""){      
+    addVerifier(app:Application, path = ""){      
 
         if(path.length == 0){
             app.use(bodyParser.urlencoded({ extended: false }));

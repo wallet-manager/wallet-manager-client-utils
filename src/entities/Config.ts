@@ -9,6 +9,8 @@ export interface Identity {
 export interface ServerConfig {
     serverPort: number;
     messageExpiredInMs: number;
+    logLevel:string;
+    whiteListedAddresses:string[];
 }
 
 export interface ClientConfig {

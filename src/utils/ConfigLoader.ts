@@ -28,7 +28,7 @@ export class ConfigLoader{
             
             console.info(`Load config from ${configFilePath}`);
             
-            let checkListJsonStr:any = fs.readFileSync(configFilePath);
+            const checkListJsonStr:any = fs.readFileSync(configFilePath);
             result = JSON.parse(checkListJsonStr);
             this.config = result;
         }else{

@@ -6,7 +6,8 @@
     },
     "serverConfig": {
         "serverPort": 8080,
-        "messageExpiredInMs": 6000000
+        "messageExpiredInMs": 6000000,
+        "whiteListedAddresses": ["Address 1", "Address 2"]
     },
     "clientConfig": {
         "instanceId": 1,

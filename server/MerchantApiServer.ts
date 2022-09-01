@@ -1,7 +1,6 @@
 
 import {CONFIG} from "../src/utils/ConfigLoader";
-import { default as express, Request, Response, NextFunction } from 'express';
-import path from "path";
+import { default as express, Request, Response } from 'express';
 import {Constants} from "../src/utils/Constants";
 import {Header} from "../src/entities/Header";
 import {ExpressVerifier} from "../src/utils/ExpressVerifier";
@@ -12,13 +11,13 @@ const app = express();
 //const identity = EthCrypto.createIdentity();
 const {identity} = CONFIG;
 const {privateKey} = identity;
-const {serverPort} = CONFIG.serverConfig;
+const {serverPort, whiteListedAddresses} = CONFIG.serverConfig;
 const {instanceId} = CONFIG.clientConfig;
 
 
 const utils = new WalletManagerUtils(privateKey, instanceId);
 
-const verifier = new ExpressVerifier(utils);
+const verifier = new ExpressVerifier(utils, whiteListedAddresses);
 
 
 // add verify middleware
@@ -32,13 +31,13 @@ app.post("/merchant", (req:Request, res:Response) => {
 
     console.log(JSON.stringify(req.headers));
 
-    let address = req.header(Constants.HEADER_ADDRESS);
-    let sequence = req.header(Constants.HEADER_SEQUENCE);
-    let session = req.header(Constants.HEADER_SESSION);
-    let signature = req.header(Constants.HEADER_SIGNATURE);
-    let timestamp = req.header(Constants.HEADER_TIMESTAMP);
+    const address = req.header(Constants.HEADER_ADDRESS);
+    const sequence = req.header(Constants.HEADER_SEQUENCE);
+    const session = req.header(Constants.HEADER_SESSION);
+    const signature = req.header(Constants.HEADER_SIGNATURE);
+    const timestamp = req.header(Constants.HEADER_TIMESTAMP);
 
-    let header: Header = {
+    const header: Header = {
         address: address?.toString() || "",
         sequence: parseInt(sequence?.toString() || "0"),
         session: session?.toString() || "",
@@ -46,7 +45,7 @@ app.post("/merchant", (req:Request, res:Response) => {
         timestamp: parseInt(timestamp?.toString() || "0")
     };
 
-    let body = req.body;
+    const body = req.body;
 
     console.info("Receive request header.....", header);
     if(typeof body === 'object'){

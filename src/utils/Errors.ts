@@ -10,4 +10,9 @@ export class Errors {
         code: 1002,
         message: "Message expired"
     }
+
+    static readonly INVALID_ADDRESS: Error = {
+        code: 1003,
+        message: "Invalid address"
+    }
 }
