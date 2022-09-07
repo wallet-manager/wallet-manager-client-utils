@@ -20,11 +20,11 @@ export class ConfigLoader{
         this.env = env;
     }
 
-    load():Config{
+    load(name:string):Config{
         let result:Config;
         if(!this.config){
             const cwd  = process.cwd();
-            const configFilePath = `${cwd}/config/config-${this.env}.json`;
+            const configFilePath = `${cwd}/config/${name}-${this.env}.json`;
             
             console.info(`Load config from ${configFilePath}`);
             
@@ -40,4 +40,4 @@ export class ConfigLoader{
 
 
 const configLoader = new ConfigLoader(NODE_ENV);
-export const CONFIG =  configLoader.load();
+export const CONFIG =  configLoader.load("config");

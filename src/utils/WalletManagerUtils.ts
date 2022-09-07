@@ -1,6 +1,6 @@
 import {Header} from "../entities/Header"
 import {Snowflake} from "./SnowflakeUtils"
-import EthCrypto from 'eth-crypto'
+import EthCrypto, { signTransaction } from 'eth-crypto'
 import {Constants} from "./Constants"
 import {AxiosInteceptor} from "./AxiosInteceptor"
 
@@ -72,20 +72,49 @@ export class WalletManagerUtils{
             return VerifyResult.InvalidAddress;
         }
 
+        const now = new Date().getTime();
+        if(header.timestamp < now - expiredInMs){
+           return VerifyResult.Expired;
+        }
+        return WalletManagerUtils.verifyHeader(header, body);
+      }
+
+      /**
+       * 
+       * @param header 
+       * @param body 
+       * @returns 
+       */
+      static verifyHeader(header:Header, body:string): VerifyResult{
+
         const content = WalletManagerUtils.contentToBeSigned(header, body);
         console.info(`Content to be signed ${content}`);
 
         const contentHash = hash.sha256().update(content).digest('hex');
 
         console.info("message hash " + contentHash);
-        const recoverAddress = EthCrypto.recover(header.signature, contentHash);
-
-        const now = new Date().getTime();
-        if(header.timestamp < now - expiredInMs){
-           return VerifyResult.Expired;
+        let signature  = header.signature;
+        if(!signature.startsWith('0x')){
+            signature = '0x' + signature;
+        }
+        const signatures = [];
+        if(signature.length == 130){
+           signatures.push(signature + '1b'); // v = 27
+           signatures.push(signature + '1c'); // v = 28
+        }else{
+            signatures.push(signature);
         }
 
-        if(recoverAddress == header.address){
+        let match = false;
+        for (const s of signatures) {
+            const recoverAddress = EthCrypto.recover(s, contentHash); 
+            if(recoverAddress == header.address){
+                match = true;
+                break;
+            }
+        }
+
+        if(match){
             return VerifyResult.Verified;
         }else{
             return VerifyResult.SignatureNotMatch;
