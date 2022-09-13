@@ -9,9 +9,9 @@
     "url": "https://github.com/wallet-manager/wallet-manager-client-utils"
   },
   "scripts": {
-    "build": "tsc",
-    "start": "yarn build && node ./dist/index.js",
-    "startTestServer": "yarn build && node ./dist/server/MerchantApiServer.js",
+    "compile": "tsc",
+    "start": "npm run compile && node ./dist/index.js",
+    "startTestServer": "npm run compile && node ./dist/server/MerchantApiServer.js",
     "test": "npx mocha",
     "release": "standard-version && git push --follow-tags && npm publish"
   },
