@@ -88,7 +88,7 @@ export class WalletManagerUtils{
       static verifyHeader(header:Header, body:string): VerifyResult{
 
         const content = WalletManagerUtils.contentToBeSigned(header, body);
-        console.info(`Content to be signed ${content}`);
+        //console.info(`Content to be signed ${content}`);
 
         const contentHash = hash.sha256().update(content).digest('hex');
 

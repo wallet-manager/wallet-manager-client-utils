@@ -1,5 +1,8 @@
 
-import {CONFIG} from "../src/utils/ConfigLoader";
+import { Config } from '../src/entities/Config';
+import { loadConfig } from '../src/utils/ConfigLoader';
+const CONFIG = loadConfig<Config>('config');
+
 import { default as express, Request, Response } from 'express';
 import {Constants} from "../src/utils/Constants";
 import {Header} from "../src/entities/Header";

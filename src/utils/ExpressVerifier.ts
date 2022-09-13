@@ -1,4 +1,7 @@
-import { CONFIG } from './ConfigLoader';
+import { Config } from '../entities/Config';
+import { loadConfig } from './ConfigLoader';
+const CONFIG = loadConfig<Config>('config');
+
 import {Request, Response, NextFunction, Application} from 'express';
 import bodyParser from 'body-parser';
 import {Constants} from "./Constants";
@@ -6,6 +9,7 @@ import {Errors} from './Errors';
 import {Header} from '../entities/Header';
 import {Error} from '../entities/Error';
 import { VerifyResult, WalletManagerUtils } from './WalletManagerUtils';
+
 
 
 export class ExpressVerifier{

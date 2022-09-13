@@ -1,4 +1,8 @@
-import {CONFIG, WalletManagerUtils, VerifyResult, Header} from "../index";
+import { Config} from '../src/entities/Config';
+import { loadConfig, WalletManagerUtils, VerifyResult, Header } from '../index';
+const CONFIG = loadConfig<Config>('config');
+
+
 import {describe, it} from "mocha";
 import {expect} from "chai";
 import hash from 'hash.js';

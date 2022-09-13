@@ -1,4 +1,7 @@
-import { CONFIG, WalletManagerUtils, Errors, Constants } from '../index';
+import { Config } from '../src/entities/Config';
+import { loadConfig, WalletManagerUtils, Errors, Constants } from '../index';
+const CONFIG = loadConfig<Config>('config');
+
 import { AxiosRequestConfig } from 'axios';
 
 import { expect } from 'chai';

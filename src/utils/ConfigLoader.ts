@@ -1,5 +1,4 @@
 import doenv from 'dotenv';
-import { Config } from '../entities/Config'
 
 doenv.config();
 if (!process.env.NODE_ENV) {
@@ -11,17 +10,17 @@ import fs from 'fs';
 //const path = require('path');
 //var cwd  = path.dirname(fs.realpathSync(__filename));
 
-export class ConfigLoader{
+export class ConfigLoader<T>{
     
     env:string;
-    config?:Config;
+    config?:T;
 
     constructor(env:string){
         this.env = env;
     }
 
-    load(name:string):Config{
-        let result:Config;
+    load(name:string):T{
+        let result:T;
         if(!this.config){
             const cwd  = process.cwd();
             const configFilePath = `${cwd}/config/${name}-${this.env}.json`;
@@ -38,6 +37,7 @@ export class ConfigLoader{
     }
 }
 
-
-const configLoader = new ConfigLoader(NODE_ENV);
-export const CONFIG =  configLoader.load("config");
+export function loadConfig<T>(configName:string){
+    const configLoader = new ConfigLoader<T>(NODE_ENV);
+    return configLoader.load(configName);
+}
