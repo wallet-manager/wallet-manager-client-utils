@@ -1,10 +1,15 @@
 import doenv from 'dotenv';
 
+let node_env:string;
 doenv.config();
 if (!process.env.NODE_ENV) {
-    throw new Error("NODE_ENV NOT SET in .env!");
+    console.warn("NODE_ENV NOT SET in .env!");
+    console.warn("Set default NODE_ENV to dev");
+    node_env = 'dev';
+}else{
+    node_env = process.env.NODE_ENV;
 }
-export const NODE_ENV:string = process.env.NODE_ENV;
+export const NODE_ENV = node_env;
 
 import fs from 'fs';
 //const path = require('path');
