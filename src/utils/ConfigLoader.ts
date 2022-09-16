@@ -1,15 +1,17 @@
 import doenv from 'dotenv';
 
-let node_env:string;
-doenv.config();
-if (!process.env.NODE_ENV) {
-    console.warn("NODE_ENV NOT SET in .env!");
-    console.warn("Set default NODE_ENV to dev");
-    node_env = 'dev';
-}else{
-    node_env = process.env.NODE_ENV;
-}
-export const NODE_ENV = node_env;
+export const GET_NODE_ENV = () => {
+    let node_env:string;
+    doenv.config();
+    if (!process.env.NODE_ENV) {
+        console.warn("NODE_ENV NOT SET in .env!");
+        console.warn("Set default NODE_ENV to dev");
+        node_env = 'dev';
+    }else{
+        node_env = process.env.NODE_ENV;
+    }
+    return node_env;
+};
 
 import fs from 'fs';
 //const path = require('path');
@@ -43,6 +45,6 @@ export class ConfigLoader<T>{
 }
 
 export function loadConfig<T>(configName:string){
-    const configLoader = new ConfigLoader<T>(NODE_ENV);
+    const configLoader = new ConfigLoader<T>(GET_NODE_ENV());
     return configLoader.load(configName);
 }
