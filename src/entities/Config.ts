@@ -20,6 +20,7 @@ export interface ClientConfig {
 }
 
 export interface Config {
+    merchantId: number;
     identity: Identity;
     serverConfig: ServerConfig;
     clientConfig: ClientConfig;
