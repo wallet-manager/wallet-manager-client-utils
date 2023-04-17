@@ -16,6 +16,13 @@ export enum VerifyResult {
     Verified = 1,
   }
 
+export interface WalletManagerRequest{
+    header:unknown;
+    data:unknown;
+}
+
+export type WalletManagerRequestCallback = (request:WalletManagerRequest)=>void
+
 export class WalletManagerUtils{
 
     seq = 0;
@@ -23,15 +30,15 @@ export class WalletManagerUtils{
     #publicKey:string;
     #address:string;
     #privateKey:string;
+    requestCallback: WalletManagerRequestCallback;
 
-
-    constructor(privateKey:string, instanceId:number){
+    constructor(privateKey:string, instanceId:number, requestCallback:WalletManagerRequestCallback = ()=>{return}){
         const sf = new Snowflake(instanceId);
         this.#sessionId = sf.getUniqueID().toString();
         this.#privateKey = privateKey;
         this.#publicKey = EthCrypto.publicKeyByPrivateKey(privateKey);
         this.#address = EthCrypto.publicKey.toAddress(this.#publicKey);
-
+        this.requestCallback = requestCallback;
     }
 
     /**
@@ -154,7 +161,7 @@ export class WalletManagerUtils{
         }
         const instance = axios.create({baseURL, headers});
     
-        const axiosInteceptor = new AxiosInteceptor(this);
+        const axiosInteceptor = new AxiosInteceptor(this, this.requestCallback);
     
         // add interceptors
         axiosInteceptor.addRequestInteceptor(instance, configFun);

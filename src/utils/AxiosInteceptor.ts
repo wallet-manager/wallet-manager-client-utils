@@ -1,13 +1,15 @@
 import { AxiosRequestConfig, AxiosInstance } from 'axios';
-import {WalletManagerUtils} from './WalletManagerUtils';
+import {WalletManagerUtils, WalletManagerRequestCallback, WalletManagerRequest} from './WalletManagerUtils';
 import {Constants} from './Constants';
 
 export class AxiosInteceptor {
 
     utils: WalletManagerUtils;
+    requestCallback:WalletManagerRequestCallback;
 
-    constructor(utils: WalletManagerUtils) {
+    constructor(utils: WalletManagerUtils, requestCallback:WalletManagerRequestCallback) {
         this.utils = utils;
+        this.requestCallback = requestCallback
     }
 
     addRequestInteceptor(axios: AxiosInstance, configFun: (config: AxiosRequestConfig<any>) => AxiosRequestConfig<any>) {
@@ -44,10 +46,11 @@ export class AxiosInteceptor {
             }
 
             if (config.headers) {
-                console.info(`reqeust headers ${JSON.stringify(config.headers)}`);
-            }
-            if (config.data) {
-                console.info(`reqeust data ${content}`);
+                const callbackRequest:WalletManagerRequest = {
+                    header:config.headers,
+                    data:config.data || {}
+                }
+                this.requestCallback(callbackRequest);
             }
             return configFun(config);
 

@@ -21,20 +21,24 @@ export class ConfigLoader<T>{
     
     env:string;
     config?:T;
+    name:string;
+    configFilePath:string;
+    readonly:boolean;
 
-    constructor(env:string){
+    constructor(name:string, readonly = true, env:string = GET_NODE_ENV()){
         this.env = env;
+        this.name = name;
+        this.readonly = readonly;
+        const cwd  = process.cwd();
+        this.configFilePath = `${cwd}/config/${name}-${this.env}.json`;
     }
 
-    load(name:string):T{
+    load():T{
         let result:T;
-        if(!this.config){
-            const cwd  = process.cwd();
-            const configFilePath = `${cwd}/config/${name}-${this.env}.json`;
+        if(!this.config){            
+            console.info(`Load config from ${this.configFilePath}`);
             
-            console.info(`Load config from ${configFilePath}`);
-            
-            const checkListJsonStr:any = fs.readFileSync(configFilePath);
+            const checkListJsonStr:any = fs.readFileSync(this.configFilePath);
             result = JSON.parse(checkListJsonStr);
             this.config = result;
         }else{
@@ -42,9 +46,27 @@ export class ConfigLoader<T>{
         }
         return result;
     }
+
+    write(obj:T, indentation = 0){
+        if(this.readonly){
+            return false;
+        }
+        if(this.configFilePath){
+            let json:string;
+            if(indentation == 0){
+                json = JSON.stringify(obj);
+            }else{
+                json = JSON.stringify(obj, null, 4);
+            }
+            fs.writeFileSync(this.configFilePath, json);
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
 
 export function loadConfig<T>(configName:string){
-    const configLoader = new ConfigLoader<T>(GET_NODE_ENV());
-    return configLoader.load(configName);
+    const configLoader = new ConfigLoader<T>(configName);
+    return configLoader.load();
 }
