@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/wallet-manager/wallet-manager-client-utils/compare/v1.0.14...v1.1.0) (2023-04-17)
+
+
+### Features
+
+* Export WalletManagerRequest and WalletManagerRequestCallback. ([432da66](https://github.com/wallet-manager/wallet-manager-client-utils/commit/432da66195ab898b0ed9fa159baebda0bdb5b57e))
+
 ### [1.0.14](https://github.com/wallet-manager/wallet-manager-client-utils/compare/v1.0.13...v1.0.14) (2023-04-17)
 
 ### [1.0.13](https://github.com/wallet-manager/wallet-manager-client-utils/compare/v1.0.12...v1.0.13) (2022-09-16)
