@@ -1,5 +1,5 @@
 export { Snowflake } from './src/utils/SnowflakeUtils';
-export { WalletManagerUtils, VerifyResult } from './src/utils/WalletManagerUtils';
+export { WalletManagerUtils, VerifyResult, WalletManagerRequest, WalletManagerRequestCallback} from './src/utils/WalletManagerUtils';
 
 export { ConfigLoader, loadConfig, GET_NODE_ENV } from './src/utils/ConfigLoader';
 export { AxiosInteceptor } from './src/utils/AxiosInteceptor';
