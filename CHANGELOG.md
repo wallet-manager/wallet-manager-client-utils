@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/wallet-manager/wallet-manager-client-utils/compare/v1.1.0...v1.1.1) (2023-04-19)
+
+
+### Bug Fixes
+
+* revert ConfigLoader. ([06fc49f](https://github.com/wallet-manager/wallet-manager-client-utils/commit/06fc49f6c6735fbcd8c14320b5b2810f316cca5d))
+
 ## [1.1.0](https://github.com/wallet-manager/wallet-manager-client-utils/compare/v1.0.14...v1.1.0) (2023-04-17)
 
 
